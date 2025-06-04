@@ -583,8 +583,233 @@
             font-size: 0.9rem;
         }
 
-        /* Responsive Design */
+        /* Login Page Styles */
+        .login-page {
+            display: flex;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .login-left {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            background: white;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .login-right {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .login-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(155, 93, 229, 0.2);
+        }
+
+        .login-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .login-box p {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .sos-form {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .sos-form.active {
+            display: block;
+        }
+
+        /* Article Display Styles */
+        .article-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .article-container h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .article-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(155, 93, 229, 0.2);
+        }
+
+        .article-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .article-content {
+            padding: 1rem;
+        }
+
+        .article-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--violet);
+        }
+
+        .article-content p {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+
+        .article-content a {
+            font-size: 0.9rem;
+            color: var(--electric-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .article-content a:hover {
+            color: var(--magenta);
+            text-decoration: underline;
+        }
+
+        /* Profile Section */
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--electric-blue);
+            margin: 0 auto 1rem;
+        }
+
+        .scoreboard {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .scoreboard h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .scoreboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .scoreboard-item {
+            padding: 1rem;
+            background: rgba(155, 93, 229, 0.05);
+            border-radius: 10px;
+        }
+
+        .scoreboard-item h4 {
+            color: var(--violet);
+            margin-bottom: 0.5rem;
+        }
+
+        .rank-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .rank-table th, .rank-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .rank-table th {
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            color: white;
+        }
+
+        .rank-table tr:hover {
+            background: rgba(155, 93, 229, 0.05);
+        }
+
         @media (max-width: 768px) {
+            .login-page {
+                flex-direction: column;
+            }
+
+            .login-left, .login-right {
+                border: none;
+                padding: 2rem;
+            }
+
             .timeline::after {
                 left: 31px;
             }
@@ -612,6 +837,14 @@
 
             .right {
                 left: 0%;
+            }
+
+            .article-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scoreboard-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -709,6 +942,38 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Medicines Available */
+        .medicines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .medicine-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(155, 93, 229, 0.2);
+        }
+
+        .medicine-card h4 {
+            color: var(--violet);
+            margin-bottom: 0.5rem;
+        }
+
+        .medicine-card p {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 
@@ -732,11 +997,172 @@
             <li><a href="#impact"><i class="fas fa-chart-line"></i> Impact</a></li>
             <li><a href="#testimonials"><i class="fas fa-quote-left"></i> Testimonials</a></li>
             <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
-            <li><a href="#" id="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="#login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="#profile" id="profile-link" style="display: none;"><i class="fas fa-user"></i> Profile</a></li>
         </ul>
     </nav>
 
     <main>
+        <section id="login" class="fade-in login-page">
+            <div class="login-left">
+                <h2>Login to Your Account</h2>
+                <div class="form-container">
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-email" class="form-label">Email Address</label>
+                            <input type="email" id="login-email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password" class="form-label">Password</label>
+                            <input type="password" id="login-password" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="text-align: center;">
+                            <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+                        </div>
+                        <div class="spinner" id="login-spinner"></div>
+                        <div id="login-message" style="text-align: center; margin-top: 1rem;"></div>
+                    </form>
+                </div>
+                <div class="article-container">
+                    <h3>Latest News & Updates</h3>
+                    <div class="article-grid">
+                        <div class="article-card fade-in">
+                            <img src="https://images.unsplash.com/photo-1585435557343-849d7b6c73fd" alt="Eco-Friendly Disposal" class="article-img">
+                            <div class="article-content">
+                                <h4>Eco-Friendly Disposal Practices</h4>
+                                <p>Learn how Medicyle ensures safe disposal of expired medications to protect our environment.</p>
+                                <a href="#">Read More</a>
+                            </div>
+                        </div>
+                        <div class="article-card fade-in">
+                            <img src="https://images.unsplash.com/photo-1576091160486-1e4c96e3b8f1" alt="Community Impact" class="article-img">
+                            <div class="article-content">
+                                <h4>Impact on Underserved Communities</h4>
+                                <p>Discover how our redistribution program is changing lives in rural areas.</p>
+                                <a href="#">Read More</a>
+                            </div>
+                        </div>
+                        <div class="article-card fade-in">
+                            <img src="https://images.unsplash.com/photo-1607619056574-7b7c4b848d1d" alt="Volunteer Stories" class="article-img">
+                            <div class="article-content">
+                                <h4>Volunteer Stories</h4>
+                                <p>Hear from our dedicated volunteers who make Medicyle's mission possible.</p>
+                                <a href="#">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="login-right">
+                <div class="login-box" id="medicine-upload">
+                    <h3><i class="fas fa-upload"></i> Medicine Upload</h3>
+                    <p>Upload details of unused or expired medications to contribute to our recycling program.</p>
+                </div>
+                <div class="login-box" id="medicines-available">
+                    <h3><i class="fas fa-pills"></i> Medicines Available</h3>
+                    < neighboring: true, block_type: block, block_name: medicines-available-content, content: <p>View available medications for redistribution to underserved communities.</p>
+                    <div class="medicines-grid" id="medicines-grid" style="display: none;">
+                        <!-- Medicines will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="login-box" id="emergency-sos">
+                    <h3><i class="fas fa-siren"></i> Emergency SOS</h3>
+                    <p>Request urgent medicine or blood supplies for critical situations.</p>
+                    <form id="sos-form" class="sos-form">
+                        <div class="form-group">
+                            <label for="urgent-medicine" class="form-label">Medicine Required</label>
+                            <input type="text" id="urgent-medicine" class="form-control" placeholder="Enter medicine name">
+                        </div>
+                        <div class="form-group">
+                            <label for="urgent-blood" class="form-label">Blood Type Required</label>
+                            <select id="urgent-blood" class="form-control">
+                                <option value="">Select Blood Type</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="text-align: center;">
+                            <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                        </div>
+                        <div class="spinner" id="sos-spinner"></div>
+                        <div id="sos-message" style="text-align: center; margin-top: 1rem;"></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="profile" class="fade-in" style="display: none;">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Avatar" class="profile-avatar">
+                    <h2>Welcome, John Doe</h2>
+                    <p>Your contributions are making a difference!</p>
+                </div>
+                <div class="scoreboard">
+                    <h3>Your Donation Scoreboard</h3>
+                    <div class="scoreboard-grid">
+                        <div class="scoreboard-item">
+                            <h4>Total Donations</h4>
+                            <p>25</p>
+                        </div>
+                        <div class="scoreboard-item">
+                            <h4>Medicines Donated</h4>
+                            <p>150 units</p>
+                        </div>
+                        <div class="scoreboard-item">
+                            <h4>Impact Score</h4>
+                            <p>875 points</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="scoreboard">
+                    <h3>Community Leaderboard</h3>
+                    <table class="rank-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Sarah Johnson</td>
+                                <td>1500</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Michael Chen</td>
+                                <td>1200</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>John Doe</td>
+                                <td>875</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Priya Patel</td>
+                                <td>650</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Emma Wilson</td>
+                                <td>500</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
         <section id="home" class="fade-in">
             <h2>Welcome to Medicyle</h2>
             <p>Medicyle is revolutionizing medical waste management through innovative collection, recycling, and redistribution of unused and expired medications. Our eco-friendly solution helps protect the environment while providing vital medications to those in need.</p>
@@ -928,6 +1354,33 @@
         </section>
     </main>
 
+    <!-- Medicine Upload Modal -->
+    <div class="modal" id="medicine-upload-modal">
+        <div class="modal-content">
+            <span class="close-modal"><i class="fas fa-times"></i></span>
+            <h3>Upload Medicine Details</h3>
+            <form id="medicine-upload-form">
+                <div class="form-group">
+                    <label for="medicine-name" class="form-label">Medicine Name</label>
+                    <input type="text" id="medicine-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="medicine-location" class="form-label">Location</label>
+                    <input type="text" id="medicine-location" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="expiry-date" class="form-label">Expiry Date</label>
+                    <input type="date" id="expiry-date" class="form-control" required>
+                </div>
+                <div class="form-group" style="text-align: center;">
+                    <button type="submit" class="btn"><i class="fas fa-upload"></i> Submit</button>
+                </div>
+                <div class="spinner" id="medicine-upload-spinner"></div>
+                <div id="medicine-upload-message" style="text-align: center; margin-top: 1rem;"></div>
+            </form>
+        </div>
+    </div>
+
     <footer class="fade-in">
         <div class="footer-content">
             <div class="footer-column">
@@ -982,12 +1435,176 @@
         </div>
         
         <div class="copyright">
-            <p>&copy; 2023 Medicyle. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            <p>© 2023 Medicyle. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
         </div>
     </footer>
 
-    <!-- Login Modal -->
-    <div class="modal" id="login-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2
+    <script>
+        // Mock data for available medicines
+        const availableMedicines = [
+            {
+                name: "Paracetamol",
+                quantity: "100 tablets",
+                expiry: "2026-06-30",
+                location: "New York"
+            },
+            {
+                name: "Ibuprofen",
+                quantity: "50 tablets",
+                expiry: "2025-12-31",
+                location: "Chicago"
+            },
+            {
+                name: "Amoxicillin",
+                quantity: "30 capsules",
+                expiry: "2026-03-15",
+                location: "Los Angeles"
+            },
+            {
+                name: "Metformin",
+                quantity: "60 tablets",
+                expiry: "2025-11-30",
+                location: "Houston"
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Counter Animation for Stats
+            const counters = document.querySelectorAll('.stat-card');
+            const speed = 200;
+
+            const animateCounters = () => {
+                counters.forEach(counter => {
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.querySelector('.stat-number').innerText.replace('+', '');
+                        const increment = target / speed;
+
+                        if (count < target) {
+                            counter.querySelector('.stat-number').innerText = Math.ceil(count + increment) + (counter.querySelector('.stat-number').innerText.includes('+') ? '+' : '');
+                            setTimeout(updateCount, 10);
+                        } else {
+                            counter.querySelector('.stat-number').innerText = target + (counter.querySelector('.stat-number').innerText.includes('+') ? '+' : '');
+                        }
+                    };
+                    updateCount();
+                });
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.stats').forEach(stat => {
+                observer.observe(stat);
+            });
+
+            // Form Submission Handling
+            const forms = [
+                { id: 'contact-form', spinner: 'form-spinner', message: 'form-message' },
+                { id: 'newsletter-form', spinner: 'newsletter-spinner', message: 'newsletter-message' },
+                { id: 'login-form', spinner: 'login-spinner', message: 'login-message' },
+                { id: 'sos-form', spinner: 'sos-spinner', message: 'sos-message' },
+                { id: 'medicine-upload-form', spinner: 'medicine-upload-spinner', message: 'medicine-upload-message' }
+            ];
+
+            forms.forEach(form => {
+                const formElement = document.getElementById(form.id);
+                if (formElement) {
+                    formElement.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const spinner = document.getElementById(form.spinner);
+                        const message = document.getElementById(form.message);
+                        spinner.style.display = 'block';
+                        message.textContent = '';
+
+                        setTimeout(() => {
+                            spinner.style.display = 'none';
+                            message.textContent = 'Submission successful!';
+                            message.style.color = 'green';
+                            formElement.reset();
+                            if (form.id === 'login-form') {
+                                // Show profile link and section
+                                document.getElementById('profile-link').style.display = 'flex';
+                                document.getElementById('login').style.display = 'none';
+                                document.getElementById('profile').style.display = 'block';
+                                window.location.hash = '#profile';
+                            }
+                            if (form.id === 'medicine-upload-form') {
+                                document.getElementById('medicine-upload-modal').style.display = 'none';
+                            }
+                        }, 1000);
+                    });
+                }
+            });
+
+            // Medicine Upload Modal
+            const medicineUploadBox = document.getElementById('medicine-upload');
+            const medicineUploadModal = document.getElementById('medicine-upload-modal');
+            const closeModal = document.querySelector('.close-modal');
+
+            medicineUploadBox.addEventListener('click', () => {
+                medicineUploadModal.style.display = 'flex';
+            });
+
+            closeModal.addEventListener('click', () => {
+                medicineUploadModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === medicineUploadModal) {
+                    medicineUploadModal.style.display = 'none';
+                }
+            });
+
+            // Medicines Available Toggle
+            const medicinesAvailableBox = document.getElementById('medicines-available');
+            const medicinesGrid = document.getElementById('medicines-grid');
+
+            medicinesAvailableBox.addEventListener('click', () => {
+                medicinesGrid.style.display = medicinesGrid.style.display === 'none' ? 'grid' : 'none';
+                
+                if (medicinesGrid.style.display === 'grid' && medicinesGrid.children.length === 0) {
+                    availableMedicines.forEach(medicine => {
+                        const medicineCard = document.createElement('div');
+                        medicineCard.className = 'medicine-card';
+                        medicineCard.innerHTML = `
+                            <h4>${medicine.name}</h4>
+                            <p>Quantity: ${medicine.quantity}</p>
+                            <p>Expiry: ${medicine.expiry}</p>
+                            <p>Location: ${medicine.location}</p>
+                        `;
+                        medicinesGrid.appendChild(medicineCard);
+                    });
+                }
+            });
+
+            // Emergency SOS Form Toggle
+            const sosBox = document.getElementById('emergency-sos');
+            const sosForm = document.getElementById('sos-form');
+            sosBox.addEventListener('click', () => {
+                sosForm.classList.toggle('active');
+            });
+
+            // Article Card Animation on Scroll
+            const articleCards = document.querySelectorAll('.article-card');
+            const articleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeIn 1s ease-in';
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            articleCards.forEach(card => {
+                articleObserver.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
