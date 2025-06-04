@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medicyle | Eco-Friendly Medical Waste Solution</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description" content="Medicyle recycles unused medications to protect the environment and support underserved communities.">
+    <meta property="og:title" content="Medicyle - Eco-Friendly Medical Waste Solution">
+    <meta property="og:description" content="Join Medicyle's mission to recycle medications and provide healthcare access.">
+    <meta property="og:url" content="https://medicyle.org">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
     <style>
         :root {
             --electric-blue: #00f5d4;
-            --violet: #9b5de5;
+            --violet: #0050ff;
             --magenta: #f15bb5;
             --sunshine: #fee440;
             --aqua: #00bbf9;
@@ -32,7 +38,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated Gradient Background */
         .gradient-bg {
             position: fixed;
             top: 0;
@@ -154,7 +159,6 @@
             border-radius: 5px;
         }
 
-        /* Stats Cards */
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -187,7 +191,6 @@
             color: transparent;
         }
 
-        /* Process Timeline */
         .timeline {
             position: relative;
             max-width: 1200px;
@@ -278,7 +281,6 @@
             box-shadow: 0 10px 35px rgba(155, 93, 229, 0.2);
         }
 
-        /* Image Gallery */
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -327,7 +329,6 @@
             transform: translateY(0);
         }
 
-        /* Form Styles */
         .form-container {
             max-width: 600px;
             margin: 0 auto;
@@ -368,7 +369,18 @@
             resize: vertical;
         }
 
-        /* Buttons */
+        .profile-info p.form-control {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info .form-group {
+            margin-bottom: 1.5rem;
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -412,7 +424,6 @@
             font-size: 1rem;
         }
 
-        /* Testimonials */
         .testimonials {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -476,7 +487,6 @@
             color: #6c757d;
         }
 
-        /* Footer */
         footer {
             background: linear-gradient(to right, var(--dark), #343a40);
             color: white;
@@ -583,233 +593,261 @@
             font-size: 0.9rem;
         }
 
-        /* Login Page Styles */
-        .login-page {
-            display: flex;
-            min-height: 100vh;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .login-left {
-            flex: 1;
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            background: white;
-            border-right: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .login-right {
-            flex: 1;
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
             justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
         }
 
-        .login-box {
+        .modal-content {
             background: white;
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease-out;
         }
 
-        .login-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(155, 93, 229, 0.2);
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .login-box h3 {
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
             font-size: 1.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, var(--violet), var(--magenta));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .login-box p {
-            font-size: 0.9rem;
+            cursor: pointer;
             color: #6c757d;
+            transition: all 0.3s ease;
         }
 
-        .sos-form {
+        .close-modal:hover {
+            color: var(--magenta);
+            transform: rotate(90deg);
+        }
+
+        .spinner {
             display: none;
-            margin-top: 1rem;
+            width: 40px;
+            height: 40px;
+            margin: 1rem auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--violet);
+            animation: spin 1s linear infinite;
         }
 
-        .sos-form.active {
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .accordion {
+            margin: 2rem 0;
+        }
+
+        .accordion-item {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(to right, var(--magenta), var(--violet));
+        }
+
+        .accordion-content {
+            padding: 1.5rem;
+            display: none;
+            background: white;
+        }
+
+        .accordion-content.active {
             display: block;
         }
 
-        /* Article Display Styles */
-        .article-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .article-container h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, var(--violet), var(--magenta));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .article-grid {
+        .leaderboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
-        .article-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: all 0.3s ease;
+        .leaderboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
         }
 
-        .article-card:hover {
+        .leaderboard-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(155, 93, 229, 0.2);
         }
 
-        .article-img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
+        .leaderboard-card.top-1 {
+            background: linear-gradient(to right, gold, #ffd700);
+            color: var(--dark);
         }
 
-        .article-content {
-            padding: 1rem;
+        .leaderboard-card.top-2 {
+            background: linear-gradient(to right, silver, #c0c0c0);
+            color: var(--dark);
         }
 
-        .article-content h4 {
+        .leaderboard-card.top-3 {
+            background: linear-gradient(to right, #cd7f32, #e69b5f);
+            color: var(--dark);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 50px;
+            text-align: center;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .points {
             font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: var(--violet);
-        }
-
-        .article-content p {
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin-bottom: 1rem;
-        }
-
-        .article-content a {
-            font-size: 0.9rem;
             color: var(--electric-blue);
-            text-decoration: none;
-            font-weight: 600;
+        }
+
+        .badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            margin-top: 0.5rem;
+        }
+
+        .progress {
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
 
-        .article-content a:hover {
-            color: var(--magenta);
-            text-decoration: underline;
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(155, 93, 229, 0.2);
         }
 
-        /* Profile Section */
-        .profile-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .profile-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
+        .blog-img {
+            width: 100%;
+            height: 200px;
             object-fit: cover;
-            border: 5px solid var(--electric-blue);
-            margin: 0 auto 1rem;
         }
 
-        .scoreboard {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2rem;
+        .blog-content {
+            padding: 1.5rem;
         }
 
-        .scoreboard h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, var(--violet), var(--magenta));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        .chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
         }
 
-        .scoreboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            text-align: center;
+        .parallax {
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
         }
 
-        .scoreboard-item {
-            padding: 1rem;
-            background: rgba(155, 93, 229, 0.05);
-            border-radius: 10px;
-        }
-
-        .scoreboard-item h4 {
-            color: var(--violet);
-            margin-bottom: 0.5rem;
-        }
-
-        .rank-table {
+        .contribution-table table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 1rem;
         }
 
-        .rank-table th, .rank-table td {
-            padding: 1rem;
+        .contribution-table th, .contribution-table td {
+            border: 1px solid #e9ecef;
+            padding: 0.5rem;
             text-align: left;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .rank-table th {
+        .contribution-table th {
             background: linear-gradient(to right, var(--violet), var(--magenta));
             color: white;
         }
 
-        .rank-table tr:hover {
-            background: rgba(155, 93, 229, 0.05);
+        .language-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
         }
 
         @media (max-width: 768px) {
-            .login-page {
-                flex-direction: column;
-            }
-
-            .login-left, .login-right {
-                border: none;
-                padding: 2rem;
-            }
-
             .timeline::after {
                 left: 31px;
             }
@@ -838,17 +876,8 @@
             .right {
                 left: 0%;
             }
-
-            .article-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .scoreboard-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
-        /* Animation Classes */
         .fade-in {
             animation: fadeIn 1s ease-in;
         }
@@ -863,488 +892,384 @@
         }
 
         @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            animation: modalFadeIn 0.3s ease-out;
-        }
-
-        @keyframes modalFadeIn {
-            from { 
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #6c757d;
-            transition: all 0.3s ease;
-        }
-
-        .close-modal:hover {
-            color: var(--magenta);
-            transform: rotate(90deg);
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            display: none;
-            width: 40px;
-            height: 40px;
-            margin: 1rem auto;
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid var(--violet);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Medicines Available */
-        .medicines-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .medicine-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .medicine-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(155, 93, 229, 0.2);
-        }
-
-        .medicine-card h4 {
-            color: var(--violet);
-            margin-bottom: 0.5rem;
-        }
-
-        .medicine-card p {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 0.5rem;
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-
 <body>
-    <!-- Animated Background -->
     <div class="gradient-bg"></div>
 
     <header class="slide-up">
         <div class="logo">
             <i class="fas fa-recycle"></i> Medicyle
         </div>
-        <h1>Transforming Medical Waste into Community Health</h1>
-        <p>Join our movement to safely recycle medications and provide healthcare access to underserved communities</p>
+        <h1 data-i18n="welcome">Welcome to Medicyle</h1>
+        <p data-i18n="header-subtitle">Join our movement to safely recycle medications and provide healthcare access to underserved communities</p>
+        <div class="language-toggle">
+            <select id="language-select" aria-label="Select language">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+            </select>
+        </div>
     </header>
 
     <nav>
         <ul>
-            <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
-            <li><a href="#process"><i class="fas fa-cogs"></i> Process</a></li>
-            <li><a href="#impact"><i class="fas fa-chart-line"></i> Impact</a></li>
-            <li><a href="#testimonials"><i class="fas fa-quote-left"></i> Testimonials</a></li>
-            <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
-            <li><a href="#login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-            <li><a href="#profile" id="profile-link" style="display: none;"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="#home"><i class="fas fa-home"></i> <span data-i18n="nav-home">Home</span></a></li>
+            <li><a href="#about"><i class="fas fa-info-circle"></i> <span data-i18n="nav-about">About</span></a></li>
+            <li><a href="#locations"><i class="fas fa-map-marker-alt"></i> <span data-i18n="nav-locations">Locations</span></a></li>
+            <li><a href="#process"><i class="fas fa-cogs"></i> <span data-i18n="nav-process">Process</span></a></li>
+            <li><a href="#impact"><i class="fas fa-chart-line"></i> <span data-i18n="nav-impact">Impact</span></a></li>
+            <li><a href="#leaderboard"><i class="fas fa-trophy"></i> <span data-i18n="nav-leaderboard">Leaderboard</span></a></li>
+            <li><a href="#testimonials"><i class="fas fa-quote-left"></i> <span data-i18n="nav-testimonials">Testimonials</span></a></li>
+            <li><a href="#education"><i class="fas fa-book"></i> <span data-i18n="nav-education">Education</span></a></li>
+            <li><a href="#donate"><i class="fas fa-box-open"></i> <span data-i18n="nav-donate">Donate</span></a></li>
+            <li><a href="#volunteer"><i class="fas fa-hand-holding-heart"></i> <span data-i18n="nav-volunteer">Volunteer</span></a></li>
+            <li><a href="#events"><i class="fas fa-calendar-alt"></i> <span data-i18n="nav-events">Events</span></a></li>
+            <li><a href="#blog"><i class="fas fa-blog"></i> <span data-i18n="nav-blog">Blog</span></a></li>
+            <li><a href="#contact"><i class="fas fa-envelope"></i> <span data-i18n="nav-contact">Contact</span></a></li>
+            <li><a href="#" id="login-btn" aria-label="Login to your account"><i class="fas fa-sign-in-alt"></i> <span data-i18n="nav-login">Login</span></a></li>
+            <li><a href="#profile" id="profile-nav" style="display: none;" aria-label="View your profile"><i class="fas fa-user"></i> <span data-i18n="nav-profile">Profile</span></a></li>
         </ul>
     </nav>
 
     <main>
-        <section id="login" class="fade-in login-page">
-            <div class="login-left">
-                <h2>Login to Your Account</h2>
-                <div class="form-container">
-                    <form id="login-form">
-                        <div class="form-group">
-                            <label for="login-email" class="form-label">Email Address</label>
-                            <input type="email" id="login-email" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="login-password" class="form-label">Password</label>
-                            <input type="password" id="login-password" class="form-control" required>
-                        </div>
-                        <div class="form-group" style="text-align: center;">
-                            <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> Login</button>
-                        </div>
-                        <div class="spinner" id="login-spinner"></div>
-                        <div id="login-message" style="text-align: center; margin-top: 1rem;"></div>
-                    </form>
-                </div>
-                <div class="article-container">
-                    <h3>Latest News & Updates</h3>
-                    <div class="article-grid">
-                        <div class="article-card fade-in">
-                            <img src="https://images.unsplash.com/photo-1585435557343-849d7b6c73fd" alt="Eco-Friendly Disposal" class="article-img">
-                            <div class="article-content">
-                                <h4>Eco-Friendly Disposal Practices</h4>
-                                <p>Learn how Medicyle ensures safe disposal of expired medications to protect our environment.</p>
-                                <a href="#">Read More</a>
-                            </div>
-                        </div>
-                        <div class="article-card fade-in">
-                            <img src="https://images.unsplash.com/photo-1576091160486-1e4c96e3b8f1" alt="Community Impact" class="article-img">
-                            <div class="article-content">
-                                <h4>Impact on Underserved Communities</h4>
-                                <p>Discover how our redistribution program is changing lives in rural areas.</p>
-                                <a href="#">Read More</a>
-                            </div>
-                        </div>
-                        <div class="article-card fade-in">
-                            <img src="https://images.unsplash.com/photo-1607619056574-7b7c4b848d1d" alt="Volunteer Stories" class="article-img">
-                            <div class="article-content">
-                                <h4>Volunteer Stories</h4>
-                                <p>Hear from our dedicated volunteers who make Medicyle's mission possible.</p>
-                                <a href="#">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="login-right">
-                <div class="login-box" id="medicine-upload">
-                    <h3><i class="fas fa-upload"></i> Medicine Upload</h3>
-                    <p>Upload details of unused or expired medications to contribute to our recycling program.</p>
-                </div>
-                <div class="login-box" id="medicines-available">
-                    <h3><i class="fas fa-pills"></i> Medicines Available</h3>
-                    < neighboring: true, block_type: block, block_name: medicines-available-content, content: <p>View available medications for redistribution to underserved communities.</p>
-                    <div class="medicines-grid" id="medicines-grid" style="display: none;">
-                        <!-- Medicines will be populated by JavaScript -->
-                    </div>
-                </div>
-                <div class="login-box" id="emergency-sos">
-                    <h3><i class="fas fa-siren"></i> Emergency SOS</h3>
-                    <p>Request urgent medicine or blood supplies for critical situations.</p>
-                    <form id="sos-form" class="sos-form">
-                        <div class="form-group">
-                            <label for="urgent-medicine" class="form-label">Medicine Required</label>
-                            <input type="text" id="urgent-medicine" class="form-control" placeholder="Enter medicine name">
-                        </div>
-                        <div class="form-group">
-                            <label for="urgent-blood" class="form-label">Blood Type Required</label>
-                            <select id="urgent-blood" class="form-control">
-                                <option value="">Select Blood Type</option>
-                                <option value="A+">A+</option>
-                                <option value="A-">A-</option>
-                                <option value="B+">B+</option>
-                                <option value="B-">B-</option>
-                                <option value="AB+">AB+</option>
-                                <option value="AB-">AB-</option>
-                                <option value="O+">O+</option>
-                                <option value="O-">O-</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="text-align: center;">
-                            <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Submit Request</button>
-                        </div>
-                        <div class="spinner" id="sos-spinner"></div>
-                        <div id="sos-message" style="text-align: center; margin-top: 1rem;"></div>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <section id="profile" class="fade-in" style="display: none;">
-            <div class="profile-container">
-                <div class="profile-header">
-                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Avatar" class="profile-avatar">
-                    <h2>Welcome, John Doe</h2>
-                    <p>Your contributions are making a difference!</p>
-                </div>
-                <div class="scoreboard">
-                    <h3>Your Donation Scoreboard</h3>
-                    <div class="scoreboard-grid">
-                        <div class="scoreboard-item">
-                            <h4>Total Donations</h4>
-                            <p>25</p>
-                        </div>
-                        <div class="scoreboard-item">
-                            <h4>Medicines Donated</h4>
-                            <p>150 units</p>
-                        </div>
-                        <div class="scoreboard-item">
-                            <h4>Impact Score</h4>
-                            <p>875 points</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="scoreboard">
-                    <h3>Community Leaderboard</h3>
-                    <table class="rank-table">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Name</th>
-                                <th>Points</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Sarah Johnson</td>
-                                <td>1500</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Michael Chen</td>
-                                <td>1200</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>John Doe</td>
-                                <td>875</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Priya Patel</td>
-                                <td>650</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>Emma Wilson</td>
-                                <td>500</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="home" class="fade-in">
-            <h2>Welcome to Medicyle</h2>
-            <p>Medicyle is revolutionizing medical waste management through innovative collection, recycling, and redistribution of unused and expired medications. Our eco-friendly solution helps protect the environment while providing vital medications to those in need.</p>
+        <section id="home" class="fade-in parallax" style="background-image: url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae');">
+            <h2 data-i18n="home-title">Welcome to Medicyle</h2>
+            <p data-i18n="home-description">Medicyle is revolutionizing medical waste management through innovative collection, recycling, and redistribution of unused and expired medications. Our eco-friendly solution helps protect the environment while providing vital medications to those in need.</p>
             
             <div class="stats">
                 <div class="stat-card" data-target="5000">
                     <div class="stat-number">0+</div>
-                    <div class="stat-label">Households Served</div>
+                    <div class="stat-label" data-i18n="stat-households">Households Served</div>
                 </div>
                 <div class="stat-card" data-target="12500">
                     <div class="stat-number">0</div>
-                    <div class="stat-label">Kgs of Medicine Collected</div>
+                    <div class="stat-label" data-i18n="stat-medicine">Kgs of Medicine Collected</div>
                 </div>
                 <div class="stat-card" data-target="200">
                     <div class="stat-number">0+</div>
-                    <div class="stat-label">Dedicated Volunteers</div>
+                    <div class="stat-label" data-i18n="stat-volunteers">Dedicated Volunteers</div>
                 </div>
                 <div class="stat-card" data-target="50">
                     <div class="stat-number">0+</div>
-                    <div class="stat-label">Partner Organizations</div>
+                    <div class="stat-label" data-i18n="stat-partners">Partner Organizations</div>
                 </div>
             </div>
 
+            <div class="social-share" style="text-align: center; margin-top: 2rem;">
+                <h3 data-i18n="share-mission">Share Our Mission</h3>
+                <a href="https://twitter.com/intent/tweet?text=Join Medicyle's eco-friendly mission!&url=https://medicyle.org" class="btn btn-outline" target="_blank" aria-label="Share on Twitter"><i class="fab fa-twitter"></i> <span data-i18n="share-twitter">Twitter</span></a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://medicyle.org" class="btn btn-outline" target="_blank" aria-label="Share on Facebook"><i class="fab fa-facebook-f"></i> <span data-i18n="share-facebook">Facebook</span></a>
+            </div>
+
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="#" class="btn btn-lg" id="join-now-btn"><i class="fas fa-hand-holding-medical"></i> Join Our Movement</a>
+                <a href="#" class="btn btn-lg" id="join-now-btn" aria-label="Join Medicyle's movement"><i class="fas fa-hand-holding-medical"></i> <span data-i18n="join-movement">Join Our Movement</span></a>
+            </div>
+
+            <div class="progress-bar" style="margin-top: 2rem;">
+                <div class="progress" style="width: 0%;" data-progress="75"></div>
+                <p style="text-align: center; margin-top: 0.5rem;" data-i18n="donation-tracker">75% of our annual medication donation goal reached!</p>
             </div>
         </section>
 
         <section id="about" class="fade-in">
-            <h2>About Our Mission</h2>
-            <p>Founded in 2020, Medicyle addresses two critical challenges simultaneously: the growing problem of pharmaceutical pollution and the lack of access to essential medicines in underserved communities.</p>
+            <h2 data-i18n="about-title">About Our Mission</h2>
+            <p data-i18n="about-description">Founded in 2020, Medicyle addresses two critical challenges simultaneously: the growing problem of pharmaceutical pollution and the lack of access to essential medicines in underserved communities.</p>
             
             <div class="gallery">
                 <div class="gallery-item">
                     <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae" alt="Medicine Collection" class="gallery-img">
-                    <div class="gallery-caption">Community medicine collection drive</div>
+                    <div class="gallery-caption" data-i18n="gallery-collection">Community medicine collection drive</div>
                 </div>
                 <div class="gallery-item">
                     <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef" alt="Medicine Sorting" class="gallery-img">
-                    <div class="gallery-caption">Our team sorting collected medications</div>
+                    <div class="gallery-caption" data-i18n="gallery-sorting">Our team sorting collected medications</div>
                 </div>
                 <div class="gallery-item">
                     <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d" alt="Medicine Redistribution" class="gallery-img">
-                    <div class="gallery-caption">Redistributing medicines to rural clinics</div>
+                    <div class="gallery-caption" data-i18n="gallery-redistribution">Redistributing medicines to rural clinics</div>
                 </div>
             </div>
         </section>
 
-        <section id="process" class="fade-in">
-            <h2>Our 5-Step Process</h2>
-            <p>Medicyle follows a rigorous, environmentally responsible process to handle medical waste and redistribute usable medications:</p>
+        <section id="locations" class="fade-in">
+            <h2 data-i18n="locations-title">Find a Drop-Off Location</h2>
+            <p data-i18n="locations-description">Locate a nearby Medicyle drop-off point to safely dispose of your unused medications.</p>
+            <div id="map"></div>
+        </section>
+
+        <section id="process" class="fade-in parallax" style="background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef');">
+            <h2 data-i18n="process-title">Our 5-Step Process</h2>
+            <p data-i18n="process-description">Medicyle follows a rigorous, environmentally responsible process to handle medical waste and redistribute usable medications:</p>
             
             <div class="timeline">
                 <div class="timeline-item left">
                     <div class="timeline-content">
-                        <h3><i class="fas fa-box-open"></i> Collection</h3>
-                        <p>Through drop-off locations, mobile units, and scheduled pickups, we gather unused medications from households, pharmacies, and healthcare facilities.</p>
+                        <h3><i class="fas fa-box-open"></i> <span data-i18n="process-collection">Collection</span></h3>
+                        <p data-i18n="process-collection-desc">Through drop-off locations, mobile units, and scheduled pickups, we gather unused medications from households, pharmacies, and healthcare facilities.</p>
                     </div>
                 </div>
                 <div class="timeline-item right">
                     <div class="timeline-content">
-                        <h3><i class="fas fa-sort"></i> Sorting & Assessment</h3>
-                        <p>Our pharmacists carefully evaluate all medications, separating usable ones from those requiring disposal, checking expiration dates and packaging integrity.</p>
+                        <h3><i class="fas fa-sort"></i> <span data-i18n="process-sorting">Sorting & Assessment</span></h3>
+                        <p data-i18n="process-sorting-desc">Our pharmacists carefully evaluate all medications, separating usable ones from those requiring disposal, checking expiration dates and packaging integrity.</p>
                     </div>
                 </div>
                 <div class="timeline-item left">
                     <div class="timeline-content">
-                        <h3><i class="fas fa-heartbeat"></i> Redistribution</h3>
-                        <p>Safe, unexpired medications are repackaged with proper labeling and distributed to free clinics and underserved communities through our partner network.</p>
+                        <h3><i class="fas fa-heartbeat"></i> <span data-i18n="process-redistribution">Redistribution</span></h3>
+                        <p data-i18n="process-redistribution-desc">Safe, unexpired medications are repackaged with proper labeling and distributed to free clinics and underserved communities through our partner network.</p>
                     </div>
                 </div>
                 <div class="timeline-item right">
                     <div class="timeline-content">
-                        <h3><i class="fas fa-recycle"></i> Eco-Disposal</h3>
-                        <p>Expired medications are processed using environmentally responsible methods, including high-temperature incineration at licensed facilities.</p>
+                        <h3><i class="fas fa-recycle"></i> <span data-i18n="process-disposal">Eco-Disposal</span></h3>
+                        <p data-i18n="process-disposal-desc">Expired medications are processed using environmentally responsible methods, including high-temperature incineration at licensed facilities.</p>
                     </div>
                 </div>
                 <div class="timeline-item left">
                     <div class="timeline-content">
-                        <h3><i class="fas fa-chart-pie"></i> Reporting</h3>
-                        <p>We maintain transparent records and provide detailed reports to regulatory bodies while using data analytics to improve our processes.</p>
+                        <h3><i class="fas fa-chart-pie"></i> <span data-i18n="process-reporting">Reporting</span></h3>
+                        <p data-i18n="process-reporting-desc">We maintain transparent records and provide detailed reports to regulatory bodies while using data analytics to improve our processes.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="impact" class="fade-in">
-            <h2>Our Measurable Impact</h2>
-            <p>Since our launch, Medicyle has made significant contributions to environmental protection and community health:</p>
+            <h2 data-i18n="impact-title">Our Measurable Impact</h2>
+            <p data-i18n="impact-description">Since our launch, Medicyle has made significant contributions to environmental protection and community health:</p>
             
             <div class="stats">
                 <div class="stat-card" data-target="85">
                     <div class="stat-number">0</div>
-                    <div class="stat-label">% Reduction in improper disposal</div>
+                    <div class="stat-label" data-i18n="stat-disposal">Reduction in improper disposal</div>
                 </div>
                 <div class="stat-card" data-target="40">
                     <div class="stat-number">0</div>
-                    <div class="stat-label">% Medications redistributed</div>
+                    <div class="stat-label" data-i18n="stat-redistributed">Medications redistributed</div>
                 </div>
                 <div class="stat-card" data-target="100">
                     <div class="stat-number">0</div>
-                    <div class="stat-label">% Safe disposal rate</div>
+                    <div class="stat-label" data-i18n="stat-safe">Safe disposal rate</div>
                 </div>
                 <div class="stat-card" data-target="25000">
                     <div class="stat-number">0+</div>
-                    <div class="stat-label">People helped annually</div>
+                    <div class="stat-label" data-i18n="stat-people">People helped annually</div>
                 </div>
             </div>
             
+            <canvas id="impact-chart" style="margin-top: 2rem;"></canvas>
+            
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="#" class="btn btn-outline" id="impact-report-btn"><i class="fas fa-file-download"></i> Download Full Impact Report</a>
+                <a href="#" class="btn btn-outline" id="impact-report-btn" aria-label="Download impact report"><i class="fas fa-file-download"></i> <span data-i18n="impact-report">Download Full Impact Report</span></a>
             </div>
         </section>
 
+        <section id="leaderboard" class="fade-in">
+            <h2 data-i18n="leaderboard-title">Community Leaderboard</h2>
+            <p data-i18n="leaderboard-description">See who’s making the biggest impact in our eco-friendly mission!</p>
+            <div class="leaderboard" id="leaderboard-list"></div>
+            <div id="your-rank" style="margin-top: 2rem; text-align: center;"></div>
+        </section>
+
         <section id="testimonials" class="fade-in">
-            <h2>What People Say About Us</h2>
-            <p>Hear from our community members, partners, and volunteers:</p>
+            <h2 data-i18n="testimonials-title">What People Say About Us</h2>
+            <p data-i18n="testimonials-description">Hear from our community members, partners, and volunteers:</p>
             
             <div class="testimonials">
                 <div class="testimonial-card">
-                    <p class="testimonial-text">Medicyle has transformed how our clinic accesses medications. Their redistributed supplies have helped us treat hundreds of patients who couldn't afford their prescriptions.</p>
+                    <p class="testimonial-text" data-i18n="testimonial-1">Medicyle has transformed how our clinic accesses medications. Their redistributed supplies have helped us treat hundreds of patients who couldn't afford their prescriptions.</p>
                     <div class="testimonial-author">
                         <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Dr. Sarah Johnson" class="author-avatar">
                         <div class="author-info">
                             <h4>Dr. Sarah Johnson</h4>
-                            <p>Medical Director, Community Health Clinic</p>
+                            <p data-i18n="testimonial-1-author">Medical Director, Community Health Clinic</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="testimonial-card">
-                    <p class="testimonial-text">As an environmental scientist, I'm impressed by Medicyle's commitment to proper pharmaceutical disposal. They're setting new standards for medical waste management.</p>
+                    <p class="testimonial-text" data-i18n="testimonial-2">As an environmental scientist, I'm impressed by Medicyle's commitment to proper pharmaceutical disposal. They're setting new standards for medical waste management.</p>
                     <div class="testimonial-author">
                         <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael Chen" class="author-avatar">
                         <div class="author-info">
                             <h4>Michael Chen</h4>
-                            <p>Environmental Researcher</p>
+                            <p data-i18n="testimonial-2-author">Environmental Researcher</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="testimonial-card">
-                    <p class="testimonial-text">Volunteering with Medicyle has been incredibly rewarding. Knowing I'm helping both the environment and people in need makes every hour worthwhile.</p>
+                    <p class="testimonial-text" data-i18n="testimonial-3">Volunteering with Medicyle has been incredibly rewarding. Knowing I'm helping both the environment and people in need makes every hour worthwhile.</p>
                     <div class="testimonial-author">
                         <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya Patel" class="author-avatar">
                         <div class="author-info">
                             <h4>Priya Patel</h4>
-                            <p>Medicyle Volunteer</p>
+                            <p data-i18n="testimonial-3-author">Medicyle Volunteer</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="fade-in">
+            <h2 data-i18n="education-title">Learn About Medication Disposal</h2>
+            <p data-i18n="education-description">Discover how to safely dispose of medications and contribute to a sustainable future.</p>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header" aria-expanded="false" aria-controls="accordion-1" id="header-1">
+                        <h3><i class="fas fa-leaf"></i> <span data-i18n="education-why">Why Proper Disposal Matters</span></h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content" id="accordion-1" aria-labelledby="header-1">
+                        <p data-i18n="education-why-desc">Improper disposal of medications can lead to water contamination and harm wildlife. Learn how Medicyle ensures eco-friendly disposal.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" aria-expanded="false" aria-controls="accordion-2" id="header-2">
+                        <h3><i class="fas fa-box-open"></i> <span data-i18n="education-prepare">How to Prepare Medications for Donation</span></h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content" id="accordion-2" aria-labelledby="header-2">
+                        <p data-i18n="education-prepare-desc">Ensure medications are unexpired, in original packaging, and free of personal labels before donating.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header" aria-expanded="false" aria-controls="accordion-3" id="header-3">
+                        <h3><i class="fas fa-recycle"></i> <span data-i18n="education-impact">Environmental Impact</span></h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content" id="accordion-3" aria-labelledby="header-3">
+                        <p data-i18n="education-impact-desc">Recycling medications reduces landfill waste and prevents harmful chemicals from entering ecosystems.</p>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <a href="#" class="btn btn-outline" aria-label="Download disposal guide"><i class="fas fa-file-pdf"></i> <span data-i18n="education-guide">Download Disposal Guide</span></a>
+            </div>
+        </section>
+
+        <section id="donate" class="fade-in">
+            <h2 data-i18n="donate-title">Donate Medications</h2>
+            <p data-i18n="donate-description">Help us recycle unused medications by submitting your donation details.</p>
+            <div class="form-container">
+                <form id="donation-form">
+                    <div class="form-group">
+                        <label for="med-name" class="form-label" data-i18n="donate-med-name">Medication Name</label>
+                        <input type="text" id="med-name" class="form-control" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="med-quantity" class="form-label" data-i18n="donate-quantity">Quantity (in units)</label>
+                        <input type="number" id="med-quantity" class="form-control" min="1" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="med-expiry" class="form-label" data-i18n="donate-expiry">Expiration Date</label>
+                        <input type="date" id="med-expiry" class="form-control" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="med-delivery" class="form-label" data-i18n="donate-delivery">Delivery Method</label>
+                        <select id="med-delivery" class="form-control" aria-required="true">
+                            <option value="pickup" data-i18n="donate-pickup">Schedule Pickup</option>
+                            <option value="dropoff" data-i18n="donate-dropoff">Drop-Off</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align: center;">
+                        <button type="submit" class="btn" aria-label="Submit donation details"><i class="fas fa-box-open"></i> <span data-i18n="donate-submit">Submit Donation</span></button>
+                    </div>
+                    <div id="donation-message" style="text-align: center; margin-top: 1rem;"></div>
+                </form>
+            </div>
+        </section>
+
+        <section id="volunteer" class="fade-in">
+            <h2 data-i18n="volunteer-title">Become a Volunteer</h2>
+            <p data-i18n="volunteer-description">Join our team to make a difference in your community.</p>
+            <div class="form-container">
+                <form id="volunteer-form">
+                    <div class="form-group">
+                        <label for="volunteer-name" class="form-label" data-i18n="volunteer-name">Name</label>
+                        <input type="text" id="volunteer-name" class="form-control" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="volunteer-email" class="form-label" data-i18n="volunteer-email">Email</label>
+                        <input type="email" id="volunteer-email" class="form-control" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="volunteer-skills" class="form-label" data-i18n="volunteer-skills">Skills</label>
+                        <select id="volunteer-skills" class="form-control" aria-required="true">
+                            <option value="logistics" data-i18n="volunteer-logistics">Logistics</option>
+                            <option value="pharmacy" data-i18n="volunteer-pharmacy">Pharmacy</option>
+                            <option value="outreach" data-i18n="volunteer-outreach">Community Outreach</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="text-align: center;">
+                        <button type="submit" class="btn" aria-label="Sign up as volunteer"><i class="fas fa-hand-holding-heart"></i> <span data-i18n="volunteer-submit">Sign Up</span></button>
+                    </div>
+                    <div id="volunteer-message" style="text-align: center; margin-top: 1rem;"></div>
+                </form>
+            </div>
+        </section>
+
+        <section id="events" class="fade-in">
+            <h2 data-i18n="events-title">Upcoming Events</h2>
+            <p data-i18n="events-description">Join us for medication collection drives and volunteer events.</p>
+            <div id="calendar"></div>
+        </section>
+
+        <section id="blog" class="fade-in">
+            <h2 data-i18n="blog-title">Our Blog</h2>
+            <p data-i18n="blog-description">Stay updated with our latest news and eco-friendly tips.</p>
+            <div class="blog-grid">
+                <div class="blog-card">
+                    <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae" alt="Blog Post" class="blog-img">
+                    <div class="blog-content">
+                        <h3 data-i18n="blog-post-1-title">Eco-Friendly Disposal Tips</h3>
+                        <p data-i18n="blog-post-1-desc">Learn how to safely dispose of medications to protect the environment.</p>
+                        <a href="#" class="btn btn-outline" aria-label="Read more about eco-friendly disposal"><span data-i18n="blog-read-more">Read More</span></a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef" alt="Blog Post" class="blog-img">
+                    <div class="blog-content">
+                        <h3 data-i18n="blog-post-1-title">Eco-Friendly Disposal Tips</h3>
+                        <p data-i18n="blog-post-1-desc">Learn how to safely dispose of medications to protect the environment.</p>
+                        <a href="#" class="btn btn-outline" aria-label="Read more about eco-friendly disposal"><span data-i18n="blog-read-more">Read More</span></a>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="contact" class="fade-in">
-            <h2>Get In Touch</h2>
-            <p>Have questions or want to get involved? Reach out to our team:</p>
+            <h2 data-i18n="contact-title">Get In Touch</h2>
+            <p data-i18n="contact-description">Have questions or want to get involved? Reach out to our team:</p>
             
             <div class="form-container">
                 <form id="contact-form">
                     <div class="form-group">
-                        <label for="name" class="form-label">Your Name</label>
-                        <input type="text" id="name" class="form-control" required>
+                        <label for="name" class="form-label" data-i18n="contact-name">Your Name</label>
+                        <input type="text" id="name" class="form-control" required aria-required="true">
                     </div>
                     
                     <div class="form-group">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" id="email" class="form-control" required>
+                        <label for="email" class="form-label" data-i18n="contact-email">Email Address</label>
+                        <input type="email" id="email" class="form-control" required aria-required="true">
                     </div>
                     
                     <div class="form-group">
-                        <label for="subject" class="form-label">Subject</label>
-                        <input type="text" id="subject" class="form-control" required>
+                        <label for="subject" class="form-label" data-i18n="contact-subject">Subject</label>
+                        <input type="text" id="subject" class="form-control" required aria-required="true">
                     </div>
                     
                     <div class="form-group">
-                        <label for="message" class="form-label">Message</label>
-                        <textarea id="message" class="form-control" required></textarea>
+                        <label for="message" class="form-label" data-i18n="contact-message">Message</label>
+                        <textarea id="message" class="form-control" required aria-required="true"></textarea>
                     </div>
                     
                     <div class="form-group" style="text-align: center;">
-                        <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Send Message</button>
+                        <button type="submit" class="btn" aria-label="Send message"><i class="fas fa-paper-plane"></i> <span data-i18n="contact-submit">Send Message</span></button>
                     </div>
                     
                     <div class="spinner" id="form-spinner"></div>
@@ -1352,258 +1277,993 @@
                 </form>
             </div>
         </section>
-    </main>
 
-    <!-- Medicine Upload Modal -->
-    <div class="modal" id="medicine-upload-modal">
-        <div class="modal-content">
-            <span class="close-modal"><i class="fas fa-times"></i></span>
-            <h3>Upload Medicine Details</h3>
-            <form id="medicine-upload-form">
-                <div class="form-group">
-                    <label for="medicine-name" class="form-label">Medicine Name</label>
-                    <input type="text" id="medicine-name" class="form-control" required>
+        <section id="profile" class="fade-in" style="display: none;">
+            <h2 data-i18n="profile-title">Your Profile</h2>
+            <p data-i18n="profile-description">Manage your account and track your contributions to Medicyle's mission.</p>
+            
+            <div class="form-container">
+                <div class="profile-info">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="profile-name">Name</label>
+                        <p id="profile-name" class="form-control"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="profile-email">Email</label>
+                        <p id="profile-email" class="form-control"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="profile-contributions">Contribution History</label>
+                        <div class="contribution-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="profile-date">Date</th>
+                                        <th data-i18n="profile-type">Type</th>
+                                        <th data-i18n="profile-details">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contribution-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="profile-badges">Badges Earned</label>
+                        <div class="badges" id="profile-badges"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="profile-status">Account Status</label>
+                        <p id="profile-status" class="form-control" data-i18n="profile-active">Active</p>
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn" id="edit-profile-btn" aria-label="Edit profile"><i class="fas fa-edit"></i> <span data-i18n="profile-edit">Edit Profile</span></button>
+                        <button class="btn btn-outline" id="logout-btn" aria-label="Logout"><i class="fas fa-sign-out-alt"></i> <span data-i18n="profile-logout">Logout</span></button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="medicine-location" class="form-label">Location</label>
-                    <input type="text" id="medicine-location" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="expiry-date" class="form-label">Expiry Date</label>
-                    <input type="date" id="expiry-date" class="form-control" required>
-                </div>
-                <div class="form-group" style="text-align: center;">
-                    <button type="submit" class="btn"><i class="fas fa-upload"></i> Submit</button>
-                </div>
-                <div class="spinner" id="medicine-upload-spinner"></div>
-                <div id="medicine-upload-message" style="text-align: center; margin-top: 1rem;"></div>
-            </form>
-        </div>
-    </div>
+            </div>
+        </section>
+
+        <section id="calculator" class="fade-in">
+            <h2 data-i18n="calculator-title">Carbon Footprint Calculator</h2>
+            <p data-i18n="calculator-description">Estimate the environmental impact of your medication donations.</p>
+            <div class="form-container">
+                <form id="carbon-form">
+                    <div class="form-group">
+                        <label for="med-weight" class="form-label" data-i18n="calculator-weight">Medication Weight (kg)</label>
+                        <input type="number" id="med-weight" class="form-control" min="0" step="0.1" required aria-required="true">
+                    </div>
+                    <div class="form-group" style="text-align: center;">
+                        <button type="submit" class="btn" aria-label="Calculate carbon savings"><i class="fas fa-calculator"></i> <span data-i18n="calculator-submit">Calculate</span></button>
+                    </div>
+                    <div id="carbon-result" style="text-align: center; margin-top: 1rem;"></div>
+                </form>
+            </div>
+        </section>
+    </main>
 
     <footer class="fade-in">
         <div class="footer-content">
             <div class="footer-column">
-                <h3>About Medicyle</h3>
-                <p>Transforming pharmaceutical waste into community health solutions through innovative recycling and redistribution.</p>
+                <h3 data-i18n="footer-about">About Medicyle</h3>
+                <p data-i18n="footer-about-desc">Transforming pharmaceutical waste into community health solutions through innovative recycling and redistribution.</p>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <a href="#" class="btn btn-outline" id="show-tip-btn" aria-label="View green tip"><i class="fas fa-leaf"></i> <span data-i18n="footer-tip">View Green Tip</span></a>
                 </div>
             </div>
             
             <div class="footer-column">
-                <h3>Quick Links</h3>
+                <h3 data-i18n="footer-links">Quick Links</h3>
                 <ul>
-                    <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
-                    <li><a href="#about"><i class="fas fa-chevron-right"></i> About Us</a></li>
-                    <li><a href="#process"><i class="fas fa-chevron-right"></i> Our Process</a></li>
-                    <li><a href="#impact"><i class="fas fa-chevron-right"></i> Impact</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                    <li><a href="#home"><i class="fas fa-chevron-right"></i> <span data-i18n="nav-home">Home</span></a></li>
+                    <li><a href="#about"><i class="fas fa-chevron-right"></i> <span data-i18n="nav-about">About Us</span></a></li>
+                    <li><a href="#process"><i class="fas fa-chevron-right"></i> <span data-i18n="nav-process">Our Process</span></a></li>
+                    <li><a href="#impact"><i class="fas fa-chevron-right"></i> <span data-i18n="nav-impact">Impact</span></a></li>
+                    <li><a href="#blog"><i class="fas fa-chevron-right"></i> <span data-i18n="nav-blog">Blog</span></a></li>
                 </ul>
             </div>
             
             <div class="footer-column">
-                <h3>Get Involved</h3>
+                <h3 data-i18n="footer-involved">Get Involved</h3>
                 <ul>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Volunteer</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Partner With Us</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Careers</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Donate</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Host a Drive</a></li>
+                    <li><a href="#volunteer"><i class="fas fa-chevron-right"></i> <span data-i18n="footer-volunteer">Volunteer</span></a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> <span data-i18n="footer-partner">Partner With Us</span></a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> <span data-i18n="footer-careers">Careers</span></a></li>
+                    <li><a href="#donate"><i class="fas fa-chevron-right"></i> <span data-i18n="footer-donate">Donate</span></a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> <span data-i18n="footer-drive">Host a Drive</span></a></li>
                 </ul>
             </div>
             
             <div class="footer-column">
-                <h3>Contact Info</h3>
+                <h3 data-i18n="footer-contact">Contact Info</h3>
                 <ul>
                     <li><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Green Way, Eco City, EC 12345</a></li>
                     <li><a href="tel:+15551234567"><i class="fas fa-phone"></i> (555) 123-4567</a></li>
                     <li><a href="mailto:contact@medicyle.org"><i class="fas fa-envelope"></i> contact@medicyle.org</a></li>
-                    <li><i class="fas fa-clock"></i> Mon-Fri: 9AM-5PM</li>
+                    <li><i class="fas fa-clock"></i> <span data-i18n="footer-hours">Mon-Fri: 9AM-5PM</span></li>
                 </ul>
                 
-                <h3 style="margin-top: 1.5rem;">Newsletter</h3>
+                <h3 style="margin-top: 1.5rem;" data-i18n="footer-newsletter">Newsletter</h3>
                 <form class="newsletter-form" id="newsletter-form">
-                    <input type="email" placeholder="Your Email" class="newsletter-input" required>
-                    <button type="submit" class="btn btn-outline" style="width: 100%; padding: 0.6rem;"><i class="fas fa-paper-plane"></i> Subscribe</button>
+                    <input type="email" class="newsletter-input" required aria-required="true" placeholder="Your Email">
+                    <button type="submit" class="btn btn-outline" style="width: 100%; padding: 0.6rem;" aria-label="Subscribe to newsletter"><i class="fas fa-paper-plane"></i> <span data-i18n="footer-subscribe">Subscribe</span></button>
                 </form>
+                <div id="newsletter-message" style="text-align: center; margin-top: 1rem;"></div>
             </div>
         </div>
         
         <div class="copyright">
-            <p>© 2023 Medicyle. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            <p>© 2025 Medicyle. All rights reserved. | <a href="#" data-i18n="footer-privacy">Privacy Policy</a> | <a href="#" data-i18n="footer-terms">Terms of Service</a></p>
         </div>
     </footer>
 
+    <div class="modal" id="login-modal" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-modal" tabindex="0" aria-label="Close login modal">×</span>
+            <h2 data-i18n="login-title">Login to Your Account</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email" class="form-label" data-i18n="login-email">Email Address</label>
+                    <input type="email" id="login-email" class="form-control" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="login-password" class="form-label" data-i18n="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" required aria-required="true">
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="submit" class="btn" aria-label="Login"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login-submit">Login</span></button>
+                </div>
+                <div id="login-message" style="text-align: center; margin-top: 1rem;"></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="chat-button">
+        <button class="btn" id="chat-btn" aria-label="Open chat support"><i class="fas fa-comments"></i> <span data-i18n="chat-support">Chat with Us</span></button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.5.1/dist/umd/i18next.min.js"></script>
     <script>
-        // Mock data for available medicines
-        const availableMedicines = [
-            {
-                name: "Paracetamol",
-                quantity: "100 tablets",
-                expiry: "2026-06-30",
-                location: "New York"
-            },
-            {
-                name: "Ibuprofen",
-                quantity: "50 tablets",
-                expiry: "2025-12-31",
-                location: "Chicago"
-            },
-            {
-                name: "Amoxicillin",
-                quantity: "30 capsules",
-                expiry: "2026-03-15",
-                location: "Los Angeles"
-            },
-            {
-                name: "Metformin",
-                quantity: "60 tablets",
-                expiry: "2025-11-30",
-                location: "Houston"
+        // Internationalization setup
+        i18next.init({
+            lng: localStorage.getItem('language') || 'en',
+            resources: {
+                en: {
+                    translation: {
+                        "welcome": "Welcome to Medicyle",
+                        "header-subtitle": "Join our movement to safely recycle medications and provide healthcare access to underserved communities",
+                        "nav-home": "Home",
+                        "nav-about": "About",
+                        "nav-locations": "Locations",
+                        "nav-process": "Process",
+                        "nav-impact": "Impact",
+                        "nav-leaderboard": "Leaderboard",
+                        "nav-testimonials": "Testimonials",
+                        "nav-education": "Education",
+                        "nav-donate": "Donate",
+                        "nav-volunteer": "Volunteer",
+                        "nav-events": "Events",
+                        "nav-blog": "Blog",
+                        "nav-contact": "Contact",
+                        "nav-login": "Login",
+                        "nav-profile": "Profile",
+                        "home-title": "Welcome to Medicyle",
+                        "home-description": "Medicyle is revolutionizing medical waste management through innovative collection, recycling, and redistribution of unused and expired medications.",
+                        "stat-households": "Households Served",
+                        "stat-medicine": "Kgs of Medicine Collected",
+                        "stat-volunteers": "Dedicated Volunteers",
+                        "stat-partners": "Partner Organizations",
+                        "share-mission": "Share Our Mission",
+                        "share-twitter": "Twitter",
+                        "share-facebook": "Facebook",
+                        "join-movement": "Join Our Movement",
+                        "donation-tracker": "75% of our annual medication donation goal reached!",
+                        "about-title": "About Our Mission",
+                        "about-description": "Founded in 2020, Medicyle addresses pharmaceutical pollution and lack of access to essential medicines.",
+                        "gallery-collection": "Community medicine collection drive",
+                        "gallery-sorting": "Our team sorting collected medications",
+                        "gallery-redistribution": "Redistributing medicines to rural clinics",
+                        "locations-title": "Find a Drop-Off Location",
+                        "locations-description": "Locate a nearby Medicyle drop-off point to safely dispose of your unused medications.",
+                        "process-title": "Our 5-Step Process",
+                        "process-description": "Medicyle follows a rigorous, environmentally responsible process to handle medical waste.",
+                        "process-collection": "Collection",
+                        "process-collection-desc": "We gather unused medications from households, pharmacies, and healthcare facilities.",
+                        "process-sorting": "Sorting & Assessment",
+                        "process-sorting-desc": "Pharmacists evaluate medications, checking expiration dates and packaging integrity.",
+                        "process-redistribution": "Redistribution",
+                        "process-redistribution-desc": "Safe medications are repackaged and distributed to free clinics.",
+                        "process-disposal": "Eco-Disposal",
+                        "process-disposal-desc": "Expired medications are processed using environmentally responsible methods.",
+                        "process-reporting": "Reporting",
+                        "process-reporting-desc": "We maintain transparent records and provide detailed reports.",
+                        "impact-title": "Our Measurable Impact",
+                        "impact-description": "Medicyle has made significant contributions to environmental protection and community health.",
+                        "stat-disposal": "Reduction in improper disposal",
+                        "stat-redistributed": "Medications redistributed",
+                        "stat-safe": "Safe disposal rate",
+                        "stat-people": "People helped annually",
+                        "impact-report": "Download Full Impact Report",
+                        "leaderboard-title": "Community Leaderboard",
+                        "leaderboard-description": "See who’s making the biggest impact in our eco-friendly mission!",
+                        "testimonials-title": "What People Say About Us",
+                        "testimonials-description": "Hear from our community members, partners, and volunteers.",
+                        "testimonial-1": "Medicyle has transformed how our clinic accesses medications.",
+                        "testimonial-1-author": "Medical Director, Community Health Clinic",
+                        "testimonial-2": "I'm impressed by Medicyle's commitment to proper pharmaceutical disposal.",
+                        "testimonial-2-author": "Environmental Researcher",
+                        "testimonial-3": "Volunteering with Medicyle has been incredibly rewarding.",
+                        "testimonial-3-author": "Medicyle Volunteer",
+                        "education-title": "Learn About Medication Disposal",
+                        "education-description": "Discover how to safely dispose of medications.",
+                        "education-why": "Why Proper Disposal Matters",
+                        "education-why-desc": "Improper disposal can lead to water contamination and harm wildlife.",
+                        "education-prepare": "How to Prepare Medications for Donation",
+                        "education-prepare-desc": "Ensure medications are unexpired and in original packaging.",
+                        "education-impact": "Environmental Impact",
+                        "education-impact-desc": "Recycling medications reduces landfill waste.",
+                        "education-guide": "Download Disposal Guide",
+                        "donate-title": "Donate Medications",
+                        "donate-description": "Help us recycle unused medications by submitting your donation details.",
+                        "donate-med-name": "Medication Name",
+                        "donate-quantity": "Quantity (in units)",
+                        "donate-expiry": "Expiration Date",
+                        "donate-delivery": "Delivery Method",
+                        "donate-pickup": "Schedule Pickup",
+                        "donate-dropoff": "Drop-Off",
+                        "donate-submit": "Submit Donation",
+                        "volunteer-title": "Become a Volunteer",
+                        "volunteer-description": "Join our team to make a difference in your community.",
+                        "volunteer-name": "Name",
+                        "volunteer-email": "Email",
+                        "volunteer-skills": "Skills",
+                        "volunteer-logistics": "Logistics",
+                        "volunteer-pharmacy": "Pharmacy",
+                        "volunteer-outreach": "Community Outreach",
+                        "volunteer-submit": "Sign Up",
+                        "events-title": "Upcoming Events",
+                        "events-description": "Join us for medication collection drives and volunteer events.",
+                        "blog-title": "Our Blog",
+                        "blog-description": "Stay updated with our latest news and eco-friendly tips.",
+                        "blog-post-1-title": "Eco-Friendly Disposal Tips",
+                        "blog-post-1-desc": "Learn how to safely dispose of medications to protect the environment.",
+                        "blog-post-2-title": "Our Impact in 2024",
+                        "blog-post-2-desc": "Discover how Medicyle helped communities and reduced waste last year.",
+                        "blog-read-more": "Read More",
+                        "contact-title": "Get In Touch",
+                        "contact-description": "Have questions or want to get involved? Reach out to our team.",
+                        "contact-name": "Your Name",
+                        "contact-email": "Email Address",
+                        "contact-subject": "Subject",
+                        "contact-message": "Message",
+                        "contact-submit": "Send Message",
+                        "profile-title": "Your Profile",
+                        "profile-description": "Manage your account and track your contributions.",
+                        "profile-name": "Name",
+                        "profile-email": "Email",
+                        "profile-contributions": "Contribution History",
+                        "profile-date": "Date",
+                        "profile-type": "Type",
+                        "profile-details": "Details",
+                        "profile-donation": "Donation",
+                        "profile-donation-desc": "5kg medications",
+                        "profile-volunteer": "Volunteer",
+                        "profile-volunteer-desc": "10 hours",
+                        "profile-badges": "Badges Earned",
+                        "profile-status": "Account Status",
+                        "profile-active": "Active",
+                        "profile-edit": "Edit Profile",
+                        "profile-logout": "Logout",
+                        "calculator-title": "Carbon Footprint Calculator",
+                        "calculator-description": "Estimate the environmental impact of your medication donations.",
+                        "calculator-weight": "Medication Weight (kg)",
+                        "calculator-submit": "Calculate",
+                        "footer-about": "About Medicyle",
+                        "footer-about-desc": "Transforming pharmaceutical waste into community health solutions.",
+                        "footer-links": "Quick Links",
+                        "footer-involved": "Get Involved",
+                        "footer-volunteer": "Volunteer",
+                        "footer-partner": "Partner With Us",
+                        "footer-careers": "Careers",
+                        "footer-donate": "Donate",
+                        "footer-drive": "Host a Drive",
+                        "footer-contact": "Contact Info",
+                        "footer-hours": "Mon-Fri: 9AM-5PM",
+                        "footer-newsletter": "Newsletter",
+                        "footer-subscribe": "Subscribe",
+                        "footer-tip": "View Green Tip",
+                        "footer-privacy": "Privacy Policy",
+                        "footer-terms": "Terms of Service",
+                        "login-title": "Login to Your Account",
+                        "login-email": "Email Address",
+                        "login-password": "Password",
+                        "login-submit": "Login",
+                        "chat-support": "Chat with Us"
+                    }
+                },
+                es: {
+                    translation: {
+                        "welcome": "Bienvenido a Medicyle",
+                        "header-subtitle": "Únete a nuestro movimiento para reciclar medicamentos de manera segura y proporcionar acceso a la atención médica a comunidades desatendidas",
+                        "nav-home": "Inicio",
+                        "nav-about": "Acerca de",
+                        "nav-locations": "Ubicaciones",
+                        "nav-process": "Proceso",
+                        "nav-impact": "Impacto",
+                        "nav-leaderboard": "Clasificación",
+                        "nav-testimonials": "Testimonios",
+                        "nav-education": "Educación",
+                        "nav-donate": "Donar",
+                        "nav-volunteer": "             can you add demo to all the above by your own and upgrade the code looks
+
+
+
+
+To enhance the provided HTML code with a demo implementation and improve its appearance, I'll add some interactive JavaScript functionality for key features (e.g., form submissions, map integration, leaderboard, and animations) and refine the styling for a more polished and modern look. Below, I'll outline the upgrades and provide a complete, updated version of the code with demo functionality. Since the original code is extensive, I'll focus on key enhancements and provide a summarized version with added JavaScript for interactivity, while ensuring the styling is upgraded for a sleeker, more professional appearance.
+
+Key Upgrades
+Styling Improvements:
+Enhanced typography with better font weights and spacing.
+Improved button animations with a modern hover effect.
+Refined gradient backgrounds for a smoother transition.
+Added subtle animations for page load and section transitions.
+Optimized responsive design for better mobile experience.
+Demo Functionality:
+Map Integration: Added a demo Leaflet map with sample drop-off locations.
+Form Handling: Simulated form submissions for donation, volunteer, and contact forms with success messages.
+Leaderboard: Populated a demo leaderboard with sample users and ranks.
+Carbon Footprint Calculator: Added a simple calculation logic for demo purposes.
+Accordion: Implemented accordion toggle functionality.
+Language Toggle: Functional language switching with i18next.
+Progress Bar Animation: Animated the donation goal progress bar.
+Login Modal: Simulated login functionality with a demo user profile.
+FullCalendar: Added a demo calendar with sample events.
+Stat Animations: Added counter animations for stats.
+Code Organization:
+Modularized JavaScript for better maintainability.
+Added comments for clarity.
+Ensured accessibility with proper ARIA attributes.
+Updated Code
+Below is the enhanced version of the code. Due to the length of the original, I'll include the critical sections (HTML structure, updated CSS, and new JavaScript) while summarizing unchanged parts. You can replace the relevant sections in your original code with these updates.
+
+Updated HTML
+The HTML structure remains largely the same, but I'll highlight key sections with added demo content. The full HTML can be reconstructed by replacing the relevant sections in your original code.
+
+html
+
+Preview
+
+Collapse
+
+Wrap
+
+Copy
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicyle | Eco-Friendly Medical Waste Solution</title>
+    <meta name="description" content="Medicyle recycles unused medications to protect the environment and support underserved communities.">
+    <meta property="og:title" content="Medicyle - Eco-Friendly Medical Waste Solution">
+    <meta property="og:description" content="Join Medicyle's mission to recycle medications and provide healthcare access.">
+    <meta property="og:url" content="https://medicyle.org">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+    <style>
+        :root {
+            --electric-blue: #00f5d4;
+            --violet: #0050ff;
+            --magenta: #f15bb5;
+            --sunshine: #fee440;
+            --aqua: #00bbf9;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f8ff;
+            color: var(--dark);
+            line-height: 1.8;
+            overflow-x: hidden;
+            font-size: 16px;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(-45deg, var(--electric-blue), var(--violet), var(--magenta), var(--aqua));
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 6px 20px var(--shadow);
+            position: relative;
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        header h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--violet);
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1.2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        nav a:hover {
+            background: linear-gradient(to right, var(--electric-blue), var(--aqua));
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 245, 212, 0.4);
+        }
+
+        section {
+            padding: 4rem 2rem;
+            margin: 2.5rem auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 25px;
+            box-shadow: 0 10px 35px var(--shadow);
+            max-width: 1300px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 2.5rem;
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        section h2::after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 80px;
+            height: 6px;
+            background: linear-gradient(to right, var(--electric-blue), var(--aqua));
+            border-radius: 6px;
+        }
+
+        .btn {
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            color: white;
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(155, 93, 229, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(155, 93, 229, 0.5);
+            background: linear-gradient(to right, var(--magenta), var(--violet));
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2.2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: 0 6px 20px var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 15px 35px rgba(155, 93, 229, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            background: linear-gradient(to right, var(--violet), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .timeline-content {
+            padding: 2.2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 25px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 25px var(--shadow);
+            aspect-ratio: 16/9;
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(155, 93, 229, 0.4);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--electric-blue);
+            box-shadow: 0 0 0 4px rgba(0, 245, 212, 0.25);
+            outline: none;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px var(--shadow);
+            animation: modalFadeIn 0.4s ease-out;
+        }
+
+        footer {
+            background: linear-gradient(to right, var(--dark), #2c3034);
+            color: white;
+            padding: 5rem 1rem 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3.5rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
             }
+            nav a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            section {
+                padding: 2.5rem 1.5rem;
+                margin: 1.5rem;
+            }
+            .timeline::after {
+                left: 31px;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <header class="slide-up">
+        <div class="logo">
+            <i class="fas fa-recycle"></i> Medicyle
+        </div>
+        <h1 data-i18n="welcome">Welcome to Medicyle</h1>
+        <p data-i18n="header-subtitle">Join our movement to safely recycle medications and provide healthcare access to underserved communities</p>
+        <div class="language-toggle">
+            <select id="language-select" aria-label="Select language">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Navigation and other sections remain as in your original code, with updated styling applied -->
+    <nav>
+        <ul>
+            <li><a href="#home"><i class="fas fa-home"></i> <span data-i18n="nav-home">Home</span></a></li>
+            <!-- Other nav items as in original -->
+        </ul>
+    </nav>
+
+    <main>
+        <section id="home" class="fade-in parallax" style="background-image: url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae');">
+            <h2 data-i18n="home-title">Welcome to Medicyle</h2>
+            <p data-i18n="home-description">Medicyle is revolutionizing medical waste management through innovative collection, recycling, and redistribution of unused and expired medications.</p>
+            <div class="stats">
+                <div class="stat-card" data-target="5000">
+                    <div class="stat-number">0+</div>
+                    <div class="stat-label" data-i18n="stat-households">Households Served</div>
+                </div>
+                <!-- Other stat cards as in original -->
+            </div>
+        </section>
+
+        <!-- Other sections (about, locations, etc.) remain as in original with updated styling -->
+        <section id="locations" class="fade-in">
+            <h2 data-i18n="locations-title">Find a Drop-Off Location</h2>
+            <p data-i18n="locations-description">Locate a nearby Medicyle drop-off point to safely dispose of your unused medications.</p>
+            <div id="map"></div>
+        </section>
+
+        <!-- Leaderboard section with demo data -->
+        <section id="leaderboard" class="fade-in">
+            <h2 data-i18n="leaderboard-title">Community Leaderboard</h2>
+            <p data-i18n="leaderboard-description">See who’s making the biggest impact in our eco-friendly mission!</p>
+            <div class="leaderboard" id="leaderboard-list">
+                <!-- Populated dynamically via JavaScript -->
+            </div>
+            <div id="your-rank" style="margin-top: 2rem; text-align: center;"></div>
+        </section>
+
+        <!-- Other sections as in original -->
+    </main>
+
+    <footer class="fade-in">
+        <!-- Footer content as in original, with updated styling -->
+    </footer>
+
+    <div class="modal" id="login-modal" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-modal" tabindex="0" aria-label="Close login modal">×</span>
+            <h2 data-i18n="login-title">Login to Your Account</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email" class="form-label" data-i18n="login-email">Email Address</label>
+                    <input type="email" id="login-email" class="form-control" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="login-password" class="form-label" data-i18n="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" required aria-required="true">
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="submit" class="btn" aria-label="Login"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login-submit">Login</span></button>
+                </div>
+                <div id="login-message" style="text-align: center; margin-top: 1rem;"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.5.1/dist/umd/i18next.min.js"></script>
+    <script>
+        // Internationalization setup
+        i18next.init({
+            lng: localStorage.getItem('language') || 'en',
+            resources: {
+                en: {
+                    translation: {
+                        // Translation keys as in original
+                    }
+                },
+                es: {
+                    translation: {
+                        // Translation keys as in original
+                    }
+                }
+            }
+        }, function(err, t) {
+            updateContent();
+        });
+
+        function updateContent() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                element.textContent = i18next.t(element.getAttribute('data-i18n'));
+            });
+        }
+
+        document.getElementById('language-select').addEventListener('change', (e) => {
+            i18next.changeLanguage(e.target.value, () => {
+                localStorage.setItem('language', e.target.value);
+                updateContent();
+            });
+        });
+
+        // Map Initialization
+        const map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Demo drop-off locations
+        const locations = [
+            { lat: 51.5, lng: -0.09, name: "Central London Drop-Off" },
+            { lat: 51.51, lng: -0.08, name: "East London Pharmacy" },
+            { lat: 51.49, lng: -0.1, name: "West London Clinic" }
         ];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Counter Animation for Stats
-            const counters = document.querySelectorAll('.stat-card');
-            const speed = 200;
+        locations.forEach(loc => {
+            L.marker([loc.lat, loc.lng]).addTo(map)
+                .bindPopup(loc.name)
+                .openPopup();
+        });
 
-            const animateCounters = () => {
-                counters.forEach(counter => {
-                    const updateCount = () => {
-                        const target = +counter.getAttribute('data-target');
-                        const count = +counter.querySelector('.stat-number').innerText.replace('+', '');
-                        const increment = target / speed;
-
-                        if (count < target) {
-                            counter.querySelector('.stat-number').innerText = Math.ceil(count + increment) + (counter.querySelector('.stat-number').innerText.includes('+') ? '+' : '');
-                            setTimeout(updateCount, 10);
-                        } else {
-                            counter.querySelector('.stat-number').innerText = target + (counter.querySelector('.stat-number').innerText.includes('+') ? '+' : '');
-                        }
-                    };
-                    updateCount();
-                });
+        // Stat Counter Animation
+        document.querySelectorAll('.stat-card').forEach(card => {
+            const target = parseInt(card.getAttribute('data-target'));
+            const number = card.querySelector('.stat-number');
+            let count = 0;
+            const increment = target / 100;
+            const updateCount = () => {
+                if (count < target) {
+                    count += increment;
+                    number.textContent = Math.floor(count) + (target > 1000 ? '+' : '');
+                    setTimeout(updateCount, 20);
+                } else {
+                    number.textContent = target + (target > 1000 ? '+' : '');
+                }
             };
+            updateCount();
+        });
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        animateCounters();
-                        observer.unobserve(entry.target);
+        // Progress Bar Animation
+        const progressBar = document.querySelector('.progress');
+        const targetProgress = parseInt(progressBar.getAttribute('data-progress'));
+        let width = 0;
+        const animateProgress = () => {
+            if (width < targetProgress) {
+                width += 1;
+                progressBar.style.width = width + '%';
+                setTimeout(animateProgress, 20);
+            }
+        };
+        animateProgress();
+
+        // Leaderboard Demo Data
+        const leaderboardData = [
+            { rank: 1, name: "Emma Wilson", points: 1500, badges: ['gold', 'silver'] },
+            { rank: 2, name: "Liam Brown", points: 1200, badges: ['silver'] },
+            { rank: 3, name: "Sophia Lee", points: 900, badges: ['bronze'] },
+            { rank: 4, name: "Noah Davis", points: 700, badges: [] }
+        ];
+
+        const leaderboardList = document.getElementById('leaderboard-list');
+        leaderboardData.forEach(user => {
+            const card = document.createElement('div');
+            card.className = `leaderboard-card top-${user.rank}`;
+            card.innerHTML = `
+                <div class="rank">${user.rank}</div>
+                <div class="user-info">
+                    <h3>${user.name}</h3>
+                    <div class="points">${user.points} Points</div>
+                    <div class="badges">
+                        ${user.badges.map(b => `<img src="https://via.placeholder.com/30?text=${b}" class="badge" alt="${b} badge">`).join('')}
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: ${(user.points / 1500) * 100}%"></div>
+                </div>
+            `;
+            leaderboardList.appendChild(card);
+        });
+
+        // Demo User Rank
+        document.getElementById('your-rank').innerHTML = '<p>Your Rank: <strong>5</strong> | Points: <strong>500</strong></p>';
+
+        // Accordion Functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                content.classList.toggle('active');
+                header.querySelector('i').classList.toggle('fa-chevron-down');
+                header.querySelector('i').classList.toggle('fa-chevron-up');
+            });
+        });
+
+        // Form Submission Handlers (Demo)
+        document.getElementById('donation-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('donation-message').textContent = 'Donation submitted successfully! Thank you for your contribution.';
+            setTimeout(() => document.getElementById('donation-form').reset(), 2000);
+        });
+
+        document.getElementById('volunteer-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('volunteer-message').textContent = 'Thank you for signing up as a volunteer!';
+            setTimeout(() => document.getElementById('volunteer-form').reset(), 2000);
+        });
+
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const spinner = document.getElementById('form-spinner');
+            spinner.style.display = 'block';
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                document.getElementById('form-message').textContent = 'Message sent successfully!';
+                document.getElementById('contact-form').reset();
+            }, 1000);
+        });
+
+        document.getElementById('newsletter-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('newsletter-message').textContent = 'Subscribed successfully!';
+            setTimeout(() => document.getElementById('newsletter-form').reset(), 2000);
+        });
+
+        // Login Modal
+        const loginModal = document.getElementById('login-modal');
+        document.getElementById('login-btn').addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
+
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            loginModal.style.display = 'none';
+        });
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('login-message').textContent = 'Logged in successfully!';
+            document.getElementById('login-btn').style.display = 'none';
+            document.getElementById('profile-nav').style.display = 'flex';
+            document.getElementById('profile').style.display = 'block';
+            loginModal.style.display = 'none';
+            // Demo profile data
+            document.getElementById('profile-name').textContent = 'Jane Doe';
+            document.getElementById('profile-email').textContent = 'jane.doe@example.com';
+            document.getElementById('contribution-list').innerHTML = `
+                <tr>
+                    <td>2025-06-01</td>
+                    <td data-i18n="profile-donation">Donation</td>
+                    <td data-i18n="profile-donation-desc">5kg medications</td>
+                </tr>
+                <tr>
+                    <td>2025-05-20</td>
+                    <td data-i18n="profile-volunteer">Volunteer</td>
+                    <td data-i18n="profile-volunteer-desc">10 hours</td>
+                </tr>
+            `;
+            document.getElementById('profile-badges').innerHTML = `
+                <img src="https://via.placeholder.com/30?text=Gold" class="badge" alt="Gold badge">
+                <img src="https://via.placeholder.com/30?text=Silver" class="badge" alt="Silver badge">
+            `;
+            updateContent();
+        });
+
+        // Carbon Footprint Calculator (Demo)
+        document.getElementById('carbon-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const weight = parseFloat(document.getElementById('med-weight').value);
+            const savings = weight * 2.5; // Demo calculation: 2.5kg CO2 saved per kg donated
+            document.getElementById('carbon-result').textContent = `Your donation saves approximately ${savings.toFixed(2)} kg of CO2!`;
+        });
+
+        // FullCalendar Initialization
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: [
+                { title: 'Medication Collection Drive', start: '2025-06-10' },
+                { title: 'Volunteer Training', start: '2025-06-15' },
+                { title: 'Community Outreach Event', start: '2025-06-20' }
+            ]
+        });
+        calendar.render();
+
+        // Impact Chart
+        const ctx = document.getElementById('impact-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Medications Recycled (kg)',
+                    data: [5000, 8000, 10000, 12500],
+                    backgroundColor: 'rgba(0, 245, 212, 0.6)',
+                    borderColor: 'rgba(0, 245, 212, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
-                });
-            }, { threshold: 0.5 });
-
-            document.querySelectorAll('.stats').forEach(stat => {
-                observer.observe(stat);
-            });
-
-            // Form Submission Handling
-            const forms = [
-                { id: 'contact-form', spinner: 'form-spinner', message: 'form-message' },
-                { id: 'newsletter-form', spinner: 'newsletter-spinner', message: 'newsletter-message' },
-                { id: 'login-form', spinner: 'login-spinner', message: 'login-message' },
-                { id: 'sos-form', spinner: 'sos-spinner', message: 'sos-message' },
-                { id: 'medicine-upload-form', spinner: 'medicine-upload-spinner', message: 'medicine-upload-message' }
-            ];
-
-            forms.forEach(form => {
-                const formElement = document.getElementById(form.id);
-                if (formElement) {
-                    formElement.addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        const spinner = document.getElementById(form.spinner);
-                        const message = document.getElementById(form.message);
-                        spinner.style.display = 'block';
-                        message.textContent = '';
-
-                        setTimeout(() => {
-                            spinner.style.display = 'none';
-                            message.textContent = 'Submission successful!';
-                            message.style.color = 'green';
-                            formElement.reset();
-                            if (form.id === 'login-form') {
-                                // Show profile link and section
-                                document.getElementById('profile-link').style.display = 'flex';
-                                document.getElementById('login').style.display = 'none';
-                                document.getElementById('profile').style.display = 'block';
-                                window.location.hash = '#profile';
-                            }
-                            if (form.id === 'medicine-upload-form') {
-                                document.getElementById('medicine-upload-modal').style.display = 'none';
-                            }
-                        }, 1000);
-                    });
                 }
-            });
+            }
+        });
 
-            // Medicine Upload Modal
-            const medicineUploadBox = document.getElementById('medicine-upload');
-            const medicineUploadModal = document.getElementById('medicine-upload-modal');
-            const closeModal = document.querySelector('.close-modal');
-
-            medicineUploadBox.addEventListener('click', () => {
-                medicineUploadModal.style.display = 'flex';
-            });
-
-            closeModal.addEventListener('click', () => {
-                medicineUploadModal.style.display = 'none';
-            });
-
-            window.addEventListener('click', (e) => {
-                if (e.target === medicineUploadModal) {
-                    medicineUploadModal.style.display = 'none';
-                }
-            });
-
-            // Medicines Available Toggle
-            const medicinesAvailableBox = document.getElementById('medicines-available');
-            const medicinesGrid = document.getElementById('medicines-grid');
-
-            medicinesAvailableBox.addEventListener('click', () => {
-                medicinesGrid.style.display = medicinesGrid.style.display === 'none' ? 'grid' : 'none';
-                
-                if (medicinesGrid.style.display === 'grid' && medicinesGrid.children.length === 0) {
-                    availableMedicines.forEach(medicine => {
-                        const medicineCard = document.createElement('div');
-                        medicineCard.className = 'medicine-card';
-                        medicineCard.innerHTML = `
-                            <h4>${medicine.name}</h4>
-                            <p>Quantity: ${medicine.quantity}</p>
-                            <p>Expiry: ${medicine.expiry}</p>
-                            <p>Location: ${medicine.location}</p>
-                        `;
-                        medicinesGrid.appendChild(medicineCard);
-                    });
-                }
-            });
-
-            // Emergency SOS Form Toggle
-            const sosBox = document.getElementById('emergency-sos');
-            const sosForm = document.getElementById('sos-form');
-            sosBox.addEventListener('click', () => {
-                sosForm.classList.toggle('active');
-            });
-
-            // Article Card Animation on Scroll
-            const articleCards = document.querySelectorAll('.article-card');
-            const articleObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'fadeIn 1s ease-in';
-                    }
-                });
-            }, { threshold: 0.2 });
-
-            articleCards.forEach(card => {
-                articleObserver.observe(card);
-            });
+        // Logout Button
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            document.getElementById('login-btn').style.display = 'flex';
+            document.getElementById('profile-nav').style.display = 'none';
+            document.getElementById('profile').style.display = 'none';
         });
     </script>
 </body>
